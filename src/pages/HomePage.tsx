@@ -376,7 +376,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
-              { icon: Phone, label: 'Phone', value: '+63 1234567', href: 'tel:+6391444444789' },
+              { icon: Phone, label: 'Phone', value: '+63 12345227', href: 'tel:+6391444444789' },
               { icon: Mail, label: 'Email', value: 'info@continental-glass.com', href: 'mailto:info@continental-glass.com' },
               { icon: MapPin, label: 'Service Areas', value: 'Nationwide Coverage' }
             ].map((info, idx) => {
