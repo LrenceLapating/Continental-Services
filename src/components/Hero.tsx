@@ -50,39 +50,6 @@ export default function Hero() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
-        {/* Floating 3D-ish Element */}
-        <motion.div
-          animate={{
-            y: [0, -20, 0],
-            rotateY: [0, 10, 0],
-            rotateX: [0, -10, 0],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="relative mb-12"
-        >
-          <div className="relative w-48 h-48 md:w-64 md:h-64 glass rounded-3xl flex items-center justify-center p-8 shadow-2xl overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Mirror effect / glass shard look */}
-            <div className="absolute -top-1/2 -left-1/2 w-full h-[200%] bg-white/10 rotate-45 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-            
-            <img 
-              src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=2072" 
-              alt="Floating Part"
-              className="w-full h-full object-cover rounded-2xl grayscale group-hover:grayscale-0 transition-all duration-700"
-              referrerPolicy="no-referrer"
-            />
-            
-            {/* Glow dots/particles */}
-            <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <div className="absolute bottom-4 left-4 w-2 h-2 rounded-full bg-blue-500 animate-pulse delay-700" />
-          </div>
-        </motion.div>
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
