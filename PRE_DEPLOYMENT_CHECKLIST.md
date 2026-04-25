@@ -1,86 +1,123 @@
-# Pre-Deployment Checklist ✅
+# Pre-Deployment Checklist for AI Chatbot
 
-Before deploying to Vercel, make sure everything is ready:
+## ✅ Before You Deploy
 
-## ✅ Code Quality
+### 1. Environment Variables in Vercel
+Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 
-- [x] No TypeScript errors (`npm run lint` passes)
-- [x] All pages load correctly
-- [x] Navigation works (Home, Services, Car Parts, About, Projects, Contact)
-- [x] Smooth scrolling works for About, Projects, Contact sections
-- [x] Car Parts dropdown menu works
-- [x] Mobile menu works
+Add this variable:
+- **Name**: `VITE_OPENROUTER_API_KEY`
+- **Value**: Your OpenRouter API key (get it from https://openrouter.ai/keys)
+- **Environments**: Check all three boxes (Production, Preview, Development)
 
-## ✅ Content
+### 2. Files to Commit
+Make sure these files are in your GitHub repo:
+- ✅ `src/components/ChatBot.tsx` (updated chatbot component)
+- ✅ `chatbot-knowledge.json` (AI knowledge base)
+- ✅ `api/chat.js` (serverless function)
+- ✅ `.env.example` (template for others)
+- ❌ `.env` (DO NOT commit - contains your secret key)
 
-- [ ] Update phone number in:
-  - `src/components/Navbar.tsx` (line with `tel:+639123456789`)
-  - `src/pages/HomePage.tsx` (contact section)
-  - `src/pages/ServicesPage.tsx` (CTA section)
-  - `src/pages/ShopPage.tsx` (CTA section)
+### 3. Deploy Steps
 
-- [ ] Update email address in:
-  - `src/pages/HomePage.tsx` (contact section)
+**Using GitHub Desktop:**
+1. Open GitHub Desktop
+2. Review changed files
+3. Write commit message: "Fixed AI chatbot serverless function"
+4. Click **Commit to main**
+5. Click **Push origin**
 
-- [ ] Update business address/service areas in:
-  - `src/pages/HomePage.tsx` (contact section)
+**Using Command Line:**
+```bash
+cd Continental-Services
+git add .
+git commit -m "Fixed AI chatbot serverless function"
+git push
+```
 
-- [ ] Add real product images in:
-  - `src/pages/ShopPage.tsx` (replace Unsplash placeholder images)
+### 4. After Deployment
 
-- [ ] Update project list if needed in:
-  - `src/pages/HomePage.tsx` (projects array)
+Wait 2-3 minutes, then test:
 
-## ✅ SEO & Branding
+1. **Open your live site**: https://continental-services.vercel.app
+2. **Click the chat button** (bottom right)
+3. **Test these questions:**
+   - "What services do you offer?"
+   - "Do you have brake pads?"
+   - "What car parts do you have?"
+   - "Is your service nationwide?"
+4. **Test features:**
+   - ✅ AI responds correctly
+   - ✅ Links in responses are clickable
+   - ✅ Clicking links keeps chat open
+   - ✅ Clicking outside chat closes it
+   - ✅ Chat reopens with previous messages
 
-- [x] Page title updated (`index.html`)
-- [x] Favicon created (`public/favicon.svg`)
-- [x] Meta description added
-- [x] Logo component created
+### 5. If Chat Doesn't Work
 
-## ✅ Configuration Files
+**Check Browser Console (F12):**
+- Look for errors in the Console tab
+- Common issues:
+  - "API key not configured" → Add environment variable in Vercel
+  - "500 error" → Check Vercel function logs
+  - "Failed to fetch" → Check network tab
 
-- [x] `vercel.json` created (routing configuration)
-- [x] `.vercelignore` created (files to ignore)
-- [x] `package.json` has correct build scripts
-- [x] `README.md` updated
+**Check Vercel Logs:**
+1. Go to Vercel Dashboard
+2. Click your project
+3. Click **Deployments** → Latest deployment
+4. Click **Functions** tab
+5. Look for `/api/chat` errors
 
-## ✅ Testing
-
-- [ ] Test locally: `npm run dev`
-- [ ] Test production build: `npm run build` then `npm run preview`
-- [ ] Test on mobile device (or browser dev tools)
-- [ ] Test all navigation links
-- [ ] Test contact form (currently logs to console)
-- [ ] Test car parts filtering
-- [ ] Test smooth scrolling to sections
-
-## ✅ Optional Enhancements (After Deployment)
-
-- [ ] Set up form submission backend (EmailJS, Formspree, or custom API)
-- [ ] Add Google Analytics
-- [ ] Add Vercel Analytics
-- [ ] Set up custom domain
-- [ ] Add real product data (database or CMS)
-- [ ] Add shopping cart functionality
-- [ ] Add image optimization
-- [ ] Add loading states
-- [ ] Add error boundaries
-
-## 🚀 Ready to Deploy?
-
-If all checkboxes above are checked, you're ready to deploy!
-
-Follow the steps in [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+**Common Fixes:**
+- Missing API key → Add `VITE_OPENROUTER_API_KEY` in Vercel settings
+- After adding env var → Redeploy (Deployments → ... → Redeploy)
 
 ---
 
-**Quick Deploy Command:**
-```bash
-# Make sure everything is committed
-git add .
-git commit -m "Ready for deployment"
-git push origin main
+## 🎉 Success Indicators
 
-# Then deploy via Vercel dashboard
-```
+Your chatbot is working when:
+- ✅ Chat button appears and opens smoothly
+- ✅ AI responds within 2-3 seconds
+- ✅ Responses are clean (no thinking process shown)
+- ✅ Links work and navigate correctly
+- ✅ Chat closes when clicking outside
+- ✅ No console errors
+
+---
+
+## 📝 Quick Reference
+
+**Your OpenRouter Model**: `inclusionai/ling-2.6-flash:free`
+
+**Knowledge Base Location**: `chatbot-knowledge.json`
+
+**To Update AI Knowledge**:
+1. Edit `chatbot-knowledge.json`
+2. Commit and push
+3. Vercel auto-deploys
+
+**To Change AI Behavior**:
+- Edit system prompt in `api/chat.js` (buildSystemPrompt function)
+- Or edit `src/components/ChatBot.tsx` (buildSystemPrompt function)
+
+---
+
+## 🔧 Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Chat not responding | Check API key in Vercel env vars |
+| 500 error | Check Vercel function logs |
+| Wrong answers | Update `chatbot-knowledge.json` |
+| Thinking process showing | Already cleaned in code |
+| Links not working | Check React Router setup |
+| Chat won't close | Click-outside handler added |
+
+---
+
+**Need Help?**
+- Vercel Docs: https://vercel.com/docs
+- OpenRouter Docs: https://openrouter.ai/docs
+- Check Vercel function logs for detailed errors
