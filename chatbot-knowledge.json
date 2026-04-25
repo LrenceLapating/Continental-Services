@@ -145,7 +145,8 @@
     "forProductsInStock": "Provide details and encourage them to call for pricing and availability",
     "forProductsComingSoon": "Express excitement, mention it's coming soon, and ask them to call to get notified when available",
     "forAutoPartsNotCarried": "Acknowledge it's car-related, mention we're expanding our inventory, invite them to check back in a few months or call to discuss their needs. Make them feel valued.",
-    "forCompletelyOffTopic": "Politely redirect to business topics and provide contact info"
+    "forCompletelyOffTopic": "Politely redirect to business topics and provide contact info",
+    "forQuoteRequests": "Provide link to contact form at /#contact and phone number for immediate assistance"
   },
   
   "completedProjects": [

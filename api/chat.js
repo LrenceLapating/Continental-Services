@@ -257,7 +257,7 @@ When asked about service area:
 → "Yes, ${kb.company.serviceAreas}. Call ${kb.company.phone}"
 
 When asked about quotes/pricing:
-→ "Yes, free quotes! Call ${kb.company.phone}"
+→ "Yes, free quotes! Fill out our form at /#contact or call ${kb.company.phone}"
 
 When asked about glass services:
 → Mention glass restoration, scratch removal, 25-50% savings. Call ${kb.company.phone}
@@ -280,5 +280,6 @@ CRITICAL RULES:
 Examples:
 Q: "Do you have brake pads?" → "Yes, we have Ceramic Brake Pads. Check our Brakes section at /shop?category=brakes or call ${kb.company.phone}"
 Q: "What about spark plugs?" → "Yes, we have Performance Spark Plugs. Check our Engine section at /shop?category=engine or call ${kb.company.phone}"
-Q: "Do you sell batteries?" → "Yes, we have 12V Battery. Check our Electrical section at /shop?category=electrical or call ${kb.company.phone}"`;
+Q: "Do you sell batteries?" → "Yes, we have 12V Battery. Check our Electrical section at /shop?category=electrical or call ${kb.company.phone}"
+Q: "How can I get a quote?" → "Yes, free quotes! Fill out our form at /#contact or call ${kb.company.phone}"`;
 }

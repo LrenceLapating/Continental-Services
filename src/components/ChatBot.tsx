@@ -25,10 +25,20 @@ export default function ChatBot() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // Quick action buttons
+  const quickActions = [
+    { icon: '🔧', text: 'What services do you offer?', query: 'What services do you offer?' },
+    { icon: '🚗', text: 'Show me car parts', query: 'What car parts do you have?' },
+    { icon: '📞', text: 'Contact information', query: 'What is your contact information?' },
+    { icon: '💰', text: 'Get a quote', query: 'How can I get a free quote?' },
+    { icon: '📍', text: 'Service areas', query: 'What areas do you serve?' },
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -61,12 +71,16 @@ export default function ChatBot() {
     };
   }, [isOpen]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const sendMessage = async (quickQuery?: string) => {
+    const messageText = quickQuery || input.trim();
+    if (!messageText || isLoading) return;
+
+    // Hide quick actions after first message
+    setShowQuickActions(false);
 
     const userMessage: Message = {
       role: 'user',
-      content: input.trim(),
+      content: messageText,
       timestamp: new Date()
     };
 
@@ -315,6 +329,32 @@ export default function ChatBot() {
                 </motion.div>
               ))}
               
+              {/* Quick Action Buttons */}
+              {showQuickActions && messages.length === 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-2 px-2"
+                >
+                  <p className="text-xs text-slate-400 text-center mb-3">Quick questions:</p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {quickActions.map((action, idx) => (
+                      <motion.button
+                        key={idx}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => sendMessage(action.query)}
+                        className="glass px-4 py-3 rounded-xl text-left text-sm text-slate-200 hover:bg-white/10 transition-all border border-white/10 hover:border-cyan-400/30 flex items-center gap-3"
+                      >
+                        <span className="text-xl">{action.icon}</span>
+                        <span>{action.text}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+              
               {isLoading && (
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -383,7 +423,7 @@ export default function ChatBot() {
 
 // Helper function to convert URLs in text to clickable links
 function convertLinksToClickable(text: string, navigate: any): JSX.Element {
-  const urlRegex = /(\/shop[^\s]*)/g;
+  const urlRegex = /(\/(?:shop[^\s]*|#contact))/g;
   const parts = text.split(urlRegex);
   
   return (
@@ -397,7 +437,19 @@ function convertLinksToClickable(text: string, navigate: any): JSX.Element {
               className="text-cyan-400 hover:text-cyan-300 underline font-semibold cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
-                navigate(part);
+                if (part === '/#contact') {
+                  // Navigate to home page first
+                  navigate('/');
+                  // Then scroll to contact section after a brief delay
+                  setTimeout(() => {
+                    const contactSection = document.getElementById('contact');
+                    if (contactSection) {
+                      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
+                } else {
+                  navigate(part);
+                }
               }}
             >
               {part}
@@ -482,7 +534,7 @@ When asked about service area:
 → "Yes, ${kb.company.serviceAreas}. Call ${kb.company.phone}"
 
 When asked about quotes/pricing:
-→ "Yes, free quotes! Call ${kb.company.phone}"
+→ "Yes, free quotes! Fill out our form at /#contact or call ${kb.company.phone}"
 
 When asked about glass services:
 → Mention glass restoration, scratch removal, 25-50% savings. Call ${kb.company.phone}
@@ -505,5 +557,6 @@ CRITICAL RULES:
 Examples:
 Q: "Do you have brake pads?" → "Yes, we have Brake Pads Set. Check our Brakes section at /shop?category=brakes or call ${kb.company.phone}"
 Q: "What about spark plugs?" → "Yes, we have Performance Spark Plugs. Check our Engine section at /shop?category=engine or call ${kb.company.phone}"
-Q: "Do you sell batteries?" → "Yes, we have 12V Battery. Check our Electrical section at /shop?category=electrical or call ${kb.company.phone}"`;
+Q: "Do you sell batteries?" → "Yes, we have 12V Battery. Check our Electrical section at /shop?category=electrical or call ${kb.company.phone}"
+Q: "How can I get a quote?" → "Yes, free quotes! Fill out our form at /#contact or call ${kb.company.phone}"`;
 }
