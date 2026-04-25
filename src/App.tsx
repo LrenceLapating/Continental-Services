@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'motion/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ChatBot from './components/ChatBot';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import ShopPage from './pages/ShopPage';
@@ -53,6 +54,7 @@ export default function App() {
         </main>
 
         <Footer />
+        <ChatBot />
       </div>
     </Router>
   );

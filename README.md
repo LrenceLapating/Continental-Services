@@ -14,6 +14,7 @@ Visit: [Your Vercel URL will be here after deployment]
 
 - **Glass Restoration Services** - Professional scratch removal for residential and commercial properties
 - **Car Parts Shop** - Quality automotive parts across 6 categories
+- **AI Chatbot** - 24/7 customer support powered by OpenRouter AI
 - **Responsive Design** - Works perfectly on desktop, tablet, and mobile
 - **Smooth Navigation** - React Router with smooth scroll sections
 - **Modern UI** - Glassmorphism effects with Tailwind CSS
@@ -35,6 +36,10 @@ Visit: [Your Vercel URL will be here after deployment]
 # Install dependencies
 npm install
 
+# Set up environment variables
+cp .env.example .env
+# Add your OpenRouter API key to .env
+
 # Run development server
 npm run dev
 
@@ -44,6 +49,38 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+## 🤖 AI Chatbot Setup
+
+1. Get your free API key from [OpenRouter](https://openrouter.ai/keys)
+2. Add to `.env` file:
+   ```
+   VITE_OPENROUTER_API_KEY=your_key_here
+   OPENROUTER_API_KEY=your_key_here
+   ```
+3. For Vercel deployment, add the key in **Settings → Environment Variables**
+
+See [CHATBOT_SETUP.md](./CHATBOT_SETUP.md) for detailed instructions.
+
+### Updating Chatbot Knowledge
+
+The chatbot uses `chatbot-knowledge.json` as its knowledge base. You can easily add/update products without touching code:
+
+```json
+{
+  "autoPartsInStock": {
+    "engine": [
+      {
+        "name": "Your New Product",
+        "features": "Product features",
+        "available": true
+      }
+    ]
+  }
+}
+```
+
+See [KNOWLEDGE_BASE_GUIDE.md](./KNOWLEDGE_BASE_GUIDE.md) for complete instructions.
 
 ## 🚢 Deployment
 

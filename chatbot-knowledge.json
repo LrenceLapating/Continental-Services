@@ -1,0 +1,162 @@
+{
+  "company": {
+    "name": "Continental Construction Services",
+    "phone": "+63 912 345 6789",
+    "email": "info@continental-glass.com",
+    "serviceAreas": "Nationwide Coverage (Philippines)",
+    "website": "https://continental-services.vercel.app"
+  },
+  
+  "glassServices": {
+    "available": true,
+    "services": [
+      {
+        "name": "Glass Scratch Removal",
+        "description": "Professional removal of minor to heavy scratches on all glass types",
+        "costSavings": "25-50% vs. replacement"
+      },
+      {
+        "name": "Residential Glass Restoration",
+        "description": "Home windows, glass doors, partitions"
+      },
+      {
+        "name": "Commercial Glass Restoration",
+        "description": "Office buildings, storefronts, commercial properties"
+      },
+      {
+        "name": "High-Rise Glass Service",
+        "description": "Elevated and hard-to-reach glass surfaces"
+      },
+      {
+        "name": "Construction Glass Repair",
+        "description": "Tool damage, cement, welding burns, slurry"
+      },
+      {
+        "name": "Graffiti Removal",
+        "description": "Vandalism and graffiti removal from glass"
+      },
+      {
+        "name": "Environmental Damage Repair",
+        "description": "Acid rain, water stains, mineral deposits"
+      }
+    ]
+  },
+  
+  "autoPartsInStock": {
+    "windshield": [
+      {
+        "name": "Premium Windshield Glass",
+        "features": "Laminated with UV protection",
+        "available": true
+      },
+      {
+        "name": "Side Window Glass",
+        "features": "Tempered with tinting option",
+        "available": true
+      },
+      {
+        "name": "Rear Window Glass",
+        "features": "With defroster option",
+        "available": true
+      }
+    ],
+    "engine": [
+      {
+        "name": "Engine Air Filter",
+        "features": "OEM-grade for optimal performance",
+        "available": true
+      },
+      {
+        "name": "Performance Spark Plugs",
+        "features": "Enhanced ignition",
+        "available": true
+      },
+      {
+        "name": "Oil Filter Premium",
+        "features": "Engine protection",
+        "available": true
+      }
+    ],
+    "brakes": [
+      {
+        "name": "Ceramic Brake Pads",
+        "features": "High-performance",
+        "available": true
+      }
+    ],
+    "lighting": [
+      {
+        "name": "LED Headlight Assembly",
+        "features": "Complete assembly",
+        "available": true
+      },
+      {
+        "name": "Tail Light Set",
+        "features": "OEM-quality replacement",
+        "available": true
+      }
+    ],
+    "electrical": [
+      {
+        "name": "12V Battery",
+        "features": "High-capacity maintenance-free",
+        "available": true
+      },
+      {
+        "name": "Alternator",
+        "features": "OEM replacement",
+        "available": true
+      }
+    ],
+    "accessories": [
+      {
+        "name": "Chrome Mirror Covers",
+        "features": "Luxury vehicle styling",
+        "available": true
+      },
+      {
+        "name": "Windshield Wipers Set",
+        "features": "Premium for clear visibility",
+        "available": true
+      }
+    ]
+  },
+  
+  "autoPartsComingSoon": {
+    "note": "Add items here that you plan to stock in the future",
+    "items": []
+  },
+  
+  "autoPartsNotCarried": {
+    "note": "Common car parts we don't carry - AI will suggest checking back or calling",
+    "categories": [
+      "Tires and wheels",
+      "Body panels and bumpers",
+      "Interior parts (seats, dashboards, carpets)",
+      "Suspension components",
+      "Exhaust systems",
+      "Transmission parts",
+      "Paint and body work supplies",
+      "Audio and entertainment systems"
+    ]
+  },
+  
+  "responseGuidelines": {
+    "forProductsInStock": "Provide details and encourage them to call for pricing and availability",
+    "forProductsComingSoon": "Express excitement, mention it's coming soon, and ask them to call to get notified when available",
+    "forAutoPartsNotCarried": "Acknowledge it's car-related, mention we're expanding our inventory, invite them to check back in a few months or call to discuss their needs. Make them feel valued.",
+    "forCompletelyOffTopic": "Politely redirect to business topics and provide contact info"
+  },
+  
+  "completedProjects": [
+    "St. Honore – ASEC (Iloilo City)",
+    "St. Dominique – ASEC (Iloilo City)",
+    "Tulip Gardens – ASEC (Laguna City)",
+    "St. Honore Fitness Gym – Megaworld Corp. (Iloilo City)",
+    "St. Dominique Kids Playground – Megaworld Corp. (Iloilo City)",
+    "Avida Atria T2 – MDC (Iloilo City)",
+    "Avida Aspira T2 – MDC (Cagayan de Oro City)",
+    "Woodridge Residences (Davao City)",
+    "Hop Inn Hotel – Maximus Innovation Corp. (Davao City)"
+  ]
+}
