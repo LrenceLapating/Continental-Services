@@ -3,6 +3,56 @@
  * @license Apache-2.0
  */
 
+// Inline knowledge base to avoid file system issues
+const knowledgeBase = {
+  "company": {
+    "name": "Continental Construction Services",
+    "phone": "+63 912 345 6789",
+    "email": "info@continental-glass.com",
+    "serviceAreas": "Nationwide Coverage (Philippines)",
+    "website": "https://continental-services.vercel.app"
+  },
+  "glassServices": {
+    "available": true,
+    "services": [
+      { "name": "Glass Scratch Removal", "description": "Professional removal of minor to heavy scratches on all glass types", "costSavings": "25-50% vs. replacement" },
+      { "name": "Residential Glass Restoration", "description": "Home windows, glass doors, partitions" },
+      { "name": "Commercial Glass Restoration", "description": "Office buildings, storefronts, commercial properties" },
+      { "name": "High-Rise Glass Service", "description": "Elevated and hard-to-reach glass surfaces" },
+      { "name": "Construction Glass Repair", "description": "Tool damage, cement, welding burns, slurry" },
+      { "name": "Graffiti Removal", "description": "Vandalism and graffiti removal from glass" },
+      { "name": "Environmental Damage Repair", "description": "Acid rain, water stains, mineral deposits" }
+    ]
+  },
+  "autoPartsInStock": {
+    "windshield": [
+      { "name": "Premium Windshield Glass", "features": "Laminated with UV protection", "available": true },
+      { "name": "Side Window Glass", "features": "Tempered with tinting option", "available": true },
+      { "name": "Rear Window Glass", "features": "With defroster option", "available": true }
+    ],
+    "engine": [
+      { "name": "Engine Air Filter", "features": "OEM-grade for optimal performance", "available": true },
+      { "name": "Performance Spark Plugs", "features": "Enhanced ignition", "available": true },
+      { "name": "Oil Filter Premium", "features": "Engine protection", "available": true }
+    ],
+    "brakes": [
+      { "name": "Ceramic Brake Pads", "features": "High-performance", "available": true }
+    ],
+    "lighting": [
+      { "name": "LED Headlight Assembly", "features": "Complete assembly", "available": true },
+      { "name": "Tail Light Set", "features": "OEM-quality replacement", "available": true }
+    ],
+    "electrical": [
+      { "name": "12V Battery", "features": "High-capacity maintenance-free", "available": true },
+      { "name": "Alternator", "features": "OEM replacement", "available": true }
+    ],
+    "accessories": [
+      { "name": "Chrome Mirror Covers", "features": "Luxury vehicle styling", "available": true },
+      { "name": "Windshield Wipers Set", "features": "Premium for clear visibility", "available": true }
+    ]
+  }
+};
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -23,33 +73,33 @@ export default async function handler(req, res) {
     const { messages } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
+      console.error('Invalid messages:', messages);
       return res.status(400).json({ error: 'Invalid request: messages array required' });
     }
 
-    // Fetch knowledge base from the deployed site
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : 'https://continental-services.vercel.app';
-    
-    const kbResponse = await fetch(`${baseUrl}/chatbot-knowledge.json`);
-    const knowledgeBase = await kbResponse.json();
-
-    const apiKey = process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
+    // Check for API key with multiple possible env var names
+    const apiKey = process.env.VITE_OPENROUTER_API_KEY || 
+                   process.env.OPENROUTER_API_KEY ||
+                   process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
 
     if (!apiKey) {
-      console.error('OPENROUTER_API_KEY not configured');
-      return res.status(500).json({ error: 'API key not configured' });
+      console.error('API key not found. Available env vars:', Object.keys(process.env).filter(k => k.includes('OPEN')));
+      return res.status(500).json({ error: 'API key not configured. Please add VITE_OPENROUTER_API_KEY to Vercel environment variables.' });
     }
+
+    console.log('API key found, length:', apiKey.length);
 
     // Build dynamic system prompt from knowledge base
     const systemPrompt = buildSystemPrompt(knowledgeBase);
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    console.log('Calling OpenRouter API...');
+
+    const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': baseUrl,
+        'HTTP-Referer': process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://continental-services.vercel.app',
         'X-Title': 'Continental Construction Services'
       },
       body: JSON.stringify({
@@ -63,17 +113,26 @@ export default async function handler(req, res) {
       })
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('OpenRouter API error:', errorData);
-      throw new Error(errorData.error?.message || 'OpenRouter API request failed');
+    console.log('OpenRouter response status:', openRouterResponse.status);
+
+    if (!openRouterResponse.ok) {
+      const errorData = await openRouterResponse.json().catch(() => ({}));
+      console.error('OpenRouter API error:', JSON.stringify(errorData));
+      return res.status(500).json({ 
+        error: 'OpenRouter API request failed',
+        details: errorData.error?.message || 'Unknown error',
+        status: openRouterResponse.status
+      });
     }
 
-    const data = await response.json();
-    const assistantMessage = data.choices[0]?.message?.content;
+    const data = await openRouterResponse.json();
+    console.log('OpenRouter response received');
+
+    const assistantMessage = data.choices?.[0]?.message?.content;
 
     if (!assistantMessage) {
-      throw new Error('No response from AI');
+      console.error('No message in response:', JSON.stringify(data));
+      return res.status(500).json({ error: 'No response from AI' });
     }
 
     // Clean thinking process
@@ -112,13 +171,16 @@ export default async function handler(req, res) {
     
     cleanedMessage = cleanedMessage.trim();
 
+    console.log('Sending cleaned response');
     return res.status(200).json({ message: cleanedMessage });
 
   } catch (error) {
-    console.error('Chat API error:', error);
+    console.error('Chat API error:', error.message);
+    console.error('Error stack:', error.stack);
     return res.status(500).json({ 
       error: 'Failed to process chat request',
-      message: error.message 
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }
@@ -148,7 +210,7 @@ function buildSystemPrompt(kb) {
       // Also map common variations
       const words = item.name.toLowerCase().split(' ');
       words.forEach(word => {
-        if (word.length > 3) { // Only meaningful words
+        if (word.length > 3) {
           productToCategory[word] = link;
         }
       });
