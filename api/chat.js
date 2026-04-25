@@ -3,8 +3,6 @@
  * @license Apache-2.0
  */
 
-import knowledgeBase from '../chatbot-knowledge.json';
-
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -28,7 +26,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid request: messages array required' });
     }
 
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    // Fetch knowledge base from the deployed site
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'https://continental-services.vercel.app';
+    
+    const kbResponse = await fetch(`${baseUrl}/chatbot-knowledge.json`);
+    const knowledgeBase = await kbResponse.json();
+
+    const apiKey = process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
 
     if (!apiKey) {
       console.error('OPENROUTER_API_KEY not configured');
@@ -43,7 +49,7 @@ export default async function handler(req, res) {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': process.env.VERCEL_URL || 'https://continental-services.vercel.app',
+        'HTTP-Referer': baseUrl,
         'X-Title': 'Continental Construction Services'
       },
       body: JSON.stringify({
@@ -72,15 +78,36 @@ export default async function handler(req, res) {
 
     // Clean thinking process
     let cleanedMessage = assistantMessage;
-    const cleaningPatterns = [
-      /Check word count.*?\.\s*/gi,
-      /That covers.*?\.\s*/gi,
-      /Let me.*?\.\s*/gi,
-      /Okay.*?\.\s*/gi
-    ];
     
-    for (const pattern of cleaningPatterns) {
-      cleanedMessage = cleanedMessage.replace(pattern, '');
+    // First, try to extract content between quotes if present
+    const quoteMatch = cleanedMessage.match(/"([^"]+)"/);
+    if (quoteMatch && quoteMatch[1].length > 30) {
+      cleanedMessage = quoteMatch[1];
+    } else {
+      // Remove thinking process patterns
+      const cleaningPatterns = [
+        /Check word count.*?\.\s*/gi,
+        /That covers.*?\.\s*/gi,
+        /flows naturally.*?\.\s*/gi,
+        /No markdown.*?\.\s*/gi,
+        /thinking process.*?\.\s*/gi,
+        /per guidelines.*?\.\s*/gi,
+        /Okay, the user.*?\.\s*/gi,
+        /Let me recall.*?\.\s*/gi,
+        /I need to respond.*?\.\s*/gi,
+        /Important:.*?\.\s*/gi,
+        /Double-check.*?\.\s*/gi,
+        /Draft:.*?\.\s*/gi,
+        /Example response.*?\.\s*/gi,
+        /includes the contact.*?\.\s*/gi,
+        /as per guidelines.*?\.\s*/gi,
+        /stay concise.*?\.\s*/gi,
+        /key points.*?\.\s*/gi
+      ];
+      
+      for (const pattern of cleaningPatterns) {
+        cleanedMessage = cleanedMessage.replace(pattern, '');
+      }
     }
     
     cleanedMessage = cleanedMessage.trim();
@@ -189,7 +216,7 @@ CRITICAL RULES:
 - No markdown, no thinking process
 
 Examples:
-Q: "Do you have brake pads?" → "Yes, we have Brake Pads Set. Check our Brakes section at /shop?category=brakes or call ${kb.company.phone}"
+Q: "Do you have brake pads?" → "Yes, we have Ceramic Brake Pads. Check our Brakes section at /shop?category=brakes or call ${kb.company.phone}"
 Q: "What about spark plugs?" → "Yes, we have Performance Spark Plugs. Check our Engine section at /shop?category=engine or call ${kb.company.phone}"
 Q: "Do you sell batteries?" → "Yes, we have 12V Battery. Check our Electrical section at /shop?category=electrical or call ${kb.company.phone}"`;
 }
